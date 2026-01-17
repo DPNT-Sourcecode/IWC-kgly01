@@ -138,8 +138,8 @@ class Queue:
             if duplicate:
                 self.purge()
                 self._queue = new_queue
-
-            self._queue.append(task)
+            else:
+                self._queue.append(task)
         print("added task")
         print(self._queue)
         return self.size
@@ -291,5 +291,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
