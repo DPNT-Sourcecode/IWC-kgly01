@@ -99,9 +99,9 @@ class Queue:
 
     def _deduplicate(self, task: TaskSubmission) -> tuple[bool, list]:
         # Unsafe to pop a list whilst iterating over it, create new list.
-        print("dedup")
         new_queue = []
         duplicate = False
+        i = 0
         for existing_task in self._queue:
             if (existing_task.provider == task.provider) and (
                 existing_task.user_id == task.user_id
@@ -113,9 +113,13 @@ class Queue:
                     new_queue.append(task)
             else:
                 new_queue.append(existing_task)
+            i = i + 1
+            print(i)
+            print(new_queue)
 
         if not duplicate:
             new_queue.append(task)
+        print(new_queue)
 
         return duplicate, new_queue
 
@@ -125,7 +129,9 @@ class Queue:
             duplicate, new_queue = self._deduplicate(task)
             if duplicate:
                 self.purge()
+                print(self._queue)
                 self._queue = new_queue
+                print(self._queue)
             metadata = task.metadata
             metadata.setdefault("priority", Priority.NORMAL)
             metadata.setdefault("group_earliest_timestamp", MAX_TIMESTAMP)
@@ -279,6 +285,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
