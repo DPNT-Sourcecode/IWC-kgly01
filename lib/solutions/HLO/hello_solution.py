@@ -5,7 +5,7 @@ class HelloSolution:
 
 
 if __name__ == "__main__":
-    hs = HelloSolution
-    returnStr = hs.hello(hs, "me")
+    returnStr = HelloSolution().hello("me")
     print(returnStr)
+
 
