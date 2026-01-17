@@ -156,3 +156,8 @@ def test_duplication_removal() -> None:
     )
 
 
+if __name__ == "__main__":
+    test_duplication_removal()
+
+
+
