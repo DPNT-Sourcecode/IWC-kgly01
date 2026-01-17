@@ -3,4 +3,3 @@ class SumSolution:
         result = x + y
 
         return result
-
