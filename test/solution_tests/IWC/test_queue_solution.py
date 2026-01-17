@@ -57,7 +57,12 @@ def test_enqueue_size_dequeue_flow() -> None:
                 entry_4["provider"], entry_4["user_id"], entry_4["timestamp"]
             ).expect(4),
             call_size().expect(4),
-            # call_dequeue().expect("companies_house", 1),
+            call_dequeue().expect("companies_house", 1),
+            call_dequeue().expect("id_verification", 1),
+            call_dequeue().expect("bank_statements", 1),
+            call_dequeue().expect("bank_statements", 2),
+            call_size().expect(0),
         ]
     )
+
 
