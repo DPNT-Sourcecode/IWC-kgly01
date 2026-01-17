@@ -140,6 +140,8 @@ class Queue:
                 self._queue = new_queue
 
             self._queue.append(task)
+        print("added task")
+        print(self._queue)
         return self.size
 
     def dequeue(self):
@@ -289,4 +291,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
