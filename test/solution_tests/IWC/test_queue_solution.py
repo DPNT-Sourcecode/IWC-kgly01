@@ -127,3 +127,31 @@ def test_prioritisations_dependency_resolution() -> None:
             call_size().expect(0),
         ]
     )
+
+
+def test_duplication_removal() -> None:
+    test_data = get_test_data()
+    run_queue(
+        [
+            call_enqueue(
+                test_data["entry_4"]["provider"],
+                test_data["entry_4"]["user_id"],
+                test_data["entry_4"]["timestamp"],
+            ).expect(1),
+            call_enqueue(
+                test_data["entry_4"]["provider"],
+                test_data["entry_4"]["user_id"],
+                iso_ts(delta_minutes=5),
+            ).expect(2),
+            call_enqueue(
+                test_data["entry_3"]["provider"],
+                test_data["entry_3"]["user_id"],
+                test_data["entry_3"]["timestamp"],
+            ).expect(3),
+            call_size().expect(2),
+            call_dequeue().expect("bank_statements", 1),
+            call_dequeue().expect("id_verification", 1),
+            call_size().expect(0),
+        ]
+    )
+

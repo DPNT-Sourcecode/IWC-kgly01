@@ -5,8 +5,8 @@ from __future__ import annotations
 from solutions.IWC.queue_solution_legacy import Queue
 from solutions.IWC.task_types import TaskDispatch, TaskSubmission
 
-class QueueSolutionEntrypoint:
 
+class QueueSolutionEntrypoint:
     def __init__(self) -> None:
         self._queue: Queue = Queue()
 
@@ -24,4 +24,9 @@ class QueueSolutionEntrypoint:
 
     def purge(self) -> bool:
         return self._queue.purge()
+
+
+if __name__ == "__main__":
+    qse = QueueSolutionEntrypoint()
+    qse.enqueue
 

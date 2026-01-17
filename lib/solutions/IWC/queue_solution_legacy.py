@@ -97,7 +97,7 @@ class Queue:
             return datetime.fromisoformat(timestamp).replace(tzinfo=None)
         return timestamp
 
-    def _deduplicate(self, task: TaskSubmission) -> tuple(bool, list):
+    def _deduplicate(self, task: TaskSubmission) -> tuple[bool, list]:
         # Unsafe to pop a list whilst iterating over it, create new list.
         new_queue = []
         duplicate = False
@@ -279,4 +279,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
