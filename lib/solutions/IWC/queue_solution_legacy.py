@@ -107,10 +107,13 @@ class Queue:
                 existing_task.user_id == task.user_id
             ):
                 duplicate = True
+                print(duplicate)
                 if existing_task.timestamp < task.timestamp:
                     new_queue.append(existing_task)
+                    print("using existing")
                 else:
                     new_queue.append(task)
+                    print("using new")
             else:
                 new_queue.append(existing_task)
             i = i + 1
@@ -118,21 +121,24 @@ class Queue:
             print(new_queue)
 
         if not duplicate:
+            print("not duplicate")
             new_queue.append(task)
-        # print(new_queue)
+            print(new_queue)
 
         return duplicate, new_queue
 
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
         for task in tasks:
+            metadata = task.metadata
+            metadata.setdefault("priority", Priority.NORMAL)
+            metadata.setdefault("group_earliest_timestamp", MAX_TIMESTAMP)
+
             duplicate, new_queue = self._deduplicate(task)
             if duplicate:
                 self.purge()
                 self._queue = new_queue
-            metadata = task.metadata
-            metadata.setdefault("priority", Priority.NORMAL)
-            metadata.setdefault("group_earliest_timestamp", MAX_TIMESTAMP)
+
             self._queue.append(task)
         return self.size
 
@@ -283,3 +289,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
