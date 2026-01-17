@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from test.solution_tests.IWC.utils import (
+from .utils import (
     call_dequeue,
     call_enqueue,
     call_size,
@@ -160,3 +160,4 @@ def test_duplication_removal() -> None:
             call_size().expect(0),
         ]
     )
+
