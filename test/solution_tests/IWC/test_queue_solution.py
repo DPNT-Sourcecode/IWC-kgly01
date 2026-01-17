@@ -4,16 +4,16 @@ from .utils import call_dequeue, call_enqueue, call_size, iso_ts, run_queue
 import pytest
 
 
-@pytest.mark.parametrize(
-    "user_id",
-    "provider",
-    "timestamp",
-    [(1, "companies_house", iso_ts(delta_minutes=0))],
-)
-def test_enqueue_size_dequeue_flow(user_id, provider, timestamp) -> None:
+# @pytest.mark.parametrize(
+#     "user_id",
+#     "provider",
+#     "timestamp",
+#     [(1, "companies_house", iso_ts(delta_minutes=0))],
+# )
+def test_enqueue_size_dequeue_flow() -> None:
     run_queue(
         [
-            call_enqueue(provider, user_id, timestamp).expect(1),
+            call_enqueue("companies_house", 1, iso_ts(delta_minutes=0)).expect(1),
             call_size().expect(1),
             call_dequeue().expect("companies_house", 1),
         ]
@@ -34,5 +34,3 @@ def test_enqueue_size_dequeue_flow(user_id, provider, timestamp) -> None:
 #             call_dequeue().expect("companies_house", 1),
 #         ]
 #     )
-
-
