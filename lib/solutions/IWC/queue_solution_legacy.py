@@ -6,16 +6,20 @@ from enum import IntEnum
 # RESOLVED on deploy
 from solutions.IWC.task_types import TaskSubmission, TaskDispatch
 
+
 class Priority(IntEnum):
     """Represents the queue ordering tiers observed in the legacy system."""
+
     HIGH = 1
     NORMAL = 2
+
 
 @dataclass
 class Provider:
     name: str
     base_url: str
     depends_on: list[str]
+
 
 MAX_TIMESTAMP = datetime.max.replace(tzinfo=None)
 
@@ -47,12 +51,15 @@ REGISTERED_PROVIDERS: list[Provider] = [
     ID_VERIFICATION_PROVIDER,
 ]
 
+
 class Queue:
     def __init__(self):
         self._queue = []
 
     def _collect_dependencies(self, task: TaskSubmission) -> list[TaskSubmission]:
-        provider = next((p for p in REGISTERED_PROVIDERS if p.name == task.provider), None)
+        provider = next(
+            (p for p in REGISTERED_PROVIDERS if p.name == task.provider), None
+        )
         if provider is None:
             return []
 
@@ -90,10 +97,35 @@ class Queue:
             return datetime.fromisoformat(timestamp).replace(tzinfo=None)
         return timestamp
 
+    def _deduplicate(self, task: TaskSubmission) -> tuple(bool, list):
+        # Unsafe to pop a list whilst iterating over it, create new list.
+        new_queue = []
+        duplicate = False
+        for _, existing_task in self._queue:
+            if (existing_task.provider == task.provider) and (
+                existing_task.user_id == task.user_id
+            ):
+                duplicate = True
+                if existing_task.timestamp < task.timestamp:
+                    new_queue.append(existing_task)
+                else:
+                    new_queue.append(task)
+            else:
+                new_queue.append(existing_task)
+
+        if not duplicate:
+            new_queue.append(task)
+
+        return duplicate, new_queue
+
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
 
         for task in tasks:
+            duplicate, new_queue = self._deduplicate(task)
+            if duplicate:
+                self.purge()
+                self._queue = new_queue
             metadata = task.metadata
             metadata.setdefault("priority", Priority.NORMAL)
             metadata.setdefault("group_earliest_timestamp", MAX_TIMESTAMP)
@@ -109,7 +141,9 @@ class Queue:
         priority_timestamps = {}
         for user_id in user_ids:
             user_tasks = [t for t in self._queue if t.user_id == user_id]
-            earliest_timestamp = sorted(user_tasks, key=lambda t: t.timestamp)[0].timestamp
+            earliest_timestamp = sorted(user_tasks, key=lambda t: t.timestamp)[
+                0
+            ].timestamp
             priority_timestamps[user_id] = earliest_timestamp
             task_count[user_id] = len(user_tasks)
 
@@ -125,7 +159,9 @@ class Queue:
             if priority_level is None or priority_level == Priority.NORMAL:
                 metadata["group_earliest_timestamp"] = MAX_TIMESTAMP
                 if task_count[task.user_id] >= 3:
-                    metadata["group_earliest_timestamp"] = priority_timestamps[task.user_id]
+                    metadata["group_earliest_timestamp"] = priority_timestamps[
+                        task.user_id
+                    ]
                     metadata["priority"] = Priority.HIGH
                 else:
                     metadata["priority"] = Priority.NORMAL
@@ -158,6 +194,7 @@ class Queue:
     def purge(self):
         self._queue.clear()
         return True
+
 
 """
 ===================================================================================================
@@ -242,3 +279,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
