@@ -101,7 +101,7 @@ class Queue:
         # Unsafe to pop a list whilst iterating over it, create new list.
         new_queue = []
         duplicate = False
-        for _, existing_task in self._queue:
+        for existing_task in self._queue:
             if (existing_task.provider == task.provider) and (
                 existing_task.user_id == task.user_id
             ):
@@ -279,5 +279,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 

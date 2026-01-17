@@ -146,7 +146,7 @@ def test_duplication_removal() -> None:
             call_enqueue(
                 test_data["entry_3"]["provider"],
                 test_data["entry_3"]["user_id"],
-                test_data["entry_3"]["timestamp"],
+                iso_ts(delta_minutes=5),
             ).expect(3),
             call_size().expect(2),
             call_dequeue().expect("bank_statements", 1),
@@ -154,4 +154,5 @@ def test_duplication_removal() -> None:
             call_size().expect(0),
         ]
     )
+
 
