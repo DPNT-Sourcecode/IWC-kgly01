@@ -160,4 +160,3 @@ def test_duplication_removal() -> None:
             call_size().expect(0),
         ]
     )
-
