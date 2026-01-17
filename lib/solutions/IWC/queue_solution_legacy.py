@@ -101,29 +101,17 @@ class Queue:
         # Unsafe to pop a list whilst iterating over it, create new list.
         new_queue = []
         duplicate = False
-        i = 0
         for existing_task in self._queue:
             if (existing_task.provider == task.provider) and (
                 existing_task.user_id == task.user_id
             ):
                 duplicate = True
-                print(duplicate)
                 if existing_task.timestamp < task.timestamp:
                     new_queue.append(existing_task)
-                    print("using existing")
                 else:
                     new_queue.append(task)
-                    print("using new")
             else:
                 new_queue.append(existing_task)
-            i = i + 1
-            print(i)
-            print(new_queue)
-
-        if not duplicate:
-            print("not duplicate")
-            new_queue.append(task)
-            print(new_queue)
 
         return duplicate, new_queue
 
@@ -140,8 +128,6 @@ class Queue:
                 self._queue = new_queue
             else:
                 self._queue.append(task)
-        print("added task")
-        print(self._queue)
         return self.size
 
     def dequeue(self):
@@ -291,6 +277,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
