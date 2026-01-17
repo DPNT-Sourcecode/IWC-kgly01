@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .utils import call_dequeue, call_enqueue, call_size, iso_ts, run_queue
-from types import Any
+from typing import Any
 import pytest
 
 
@@ -54,7 +54,7 @@ def get_test_data() -> dict[str, dict[str, Any]]:
 
 
 def test_prioritisations_rule_of_3() -> None:
-    test_data = get_test_data
+    test_data = get_test_data()
 
     run_queue(
         [
@@ -86,6 +86,7 @@ def test_prioritisations_rule_of_3() -> None:
             call_size().expect(0),
         ]
     )
+
 
 
 
