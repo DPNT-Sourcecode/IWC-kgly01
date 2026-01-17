@@ -29,4 +29,3 @@ class QueueSolutionEntrypoint:
 if __name__ == "__main__":
     qse = QueueSolutionEntrypoint()
     qse.enqueue
-

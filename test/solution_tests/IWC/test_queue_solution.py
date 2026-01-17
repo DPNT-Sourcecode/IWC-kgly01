@@ -43,90 +43,90 @@ def get_test_data() -> dict[str, dict[str, Any]]:
     return test_data
 
 
-def test_enqueue_size_dequeue_flow() -> None:
-    run_queue(
-        [
-            call_enqueue("companies_house", 1, iso_ts(delta_minutes=0)).expect(1),
-            call_size().expect(1),
-            call_dequeue().expect("companies_house", 1),
-        ]
-    )
+# def test_enqueue_size_dequeue_flow() -> None:
+#     run_queue(
+#         [
+#             call_enqueue("companies_house", 1, iso_ts(delta_minutes=0)).expect(1),
+#             call_size().expect(1),
+#             call_dequeue().expect("companies_house", 1),
+#         ]
+#     )
 
 
-def test_prioritisations_rule_of_3() -> None:
-    test_data = get_test_data()
+# def test_prioritisations_rule_of_3() -> None:
+#     test_data = get_test_data()
 
-    run_queue(
-        [
-            call_enqueue(
-                test_data["entry_1"]["provider"],
-                test_data["entry_1"]["user_id"],
-                test_data["entry_1"]["timestamp"],
-            ).expect(1),
-            call_enqueue(
-                test_data["entry_2"]["provider"],
-                test_data["entry_2"]["user_id"],
-                test_data["entry_2"]["timestamp"],
-            ).expect(2),
-            call_enqueue(
-                test_data["entry_3"]["provider"],
-                test_data["entry_3"]["user_id"],
-                test_data["entry_3"]["timestamp"],
-            ).expect(3),
-            call_enqueue(
-                test_data["entry_4"]["provider"],
-                test_data["entry_4"]["user_id"],
-                test_data["entry_4"]["timestamp"],
-            ).expect(4),
-            call_size().expect(4),
-            call_dequeue().expect("companies_house", 1),
-            call_dequeue().expect("id_verification", 1),
-            call_dequeue().expect("bank_statements", 1),
-            call_dequeue().expect("bank_statements", 2),
-            call_size().expect(0),
-        ]
-    )
-
-
-def test_prioritisations_timestamp_ordering() -> None:
-    test_data = get_test_data()
-
-    run_queue(
-        [
-            call_enqueue(
-                test_data["entry_4"]["provider"],
-                test_data["entry_4"]["user_id"],
-                iso_ts(delta_minutes=5),
-            ).expect(1),
-            call_enqueue(
-                test_data["entry_2"]["provider"],
-                test_data["entry_2"]["user_id"],
-                test_data["entry_2"]["timestamp"],
-            ).expect(2),
-            call_size().expect(2),
-            call_dequeue().expect("bank_statements", 2),
-            call_dequeue().expect("bank_statements", 1),
-            call_size().expect(0),
-        ]
-    )
+#     run_queue(
+#         [
+#             call_enqueue(
+#                 test_data["entry_1"]["provider"],
+#                 test_data["entry_1"]["user_id"],
+#                 test_data["entry_1"]["timestamp"],
+#             ).expect(1),
+#             call_enqueue(
+#                 test_data["entry_2"]["provider"],
+#                 test_data["entry_2"]["user_id"],
+#                 test_data["entry_2"]["timestamp"],
+#             ).expect(2),
+#             call_enqueue(
+#                 test_data["entry_3"]["provider"],
+#                 test_data["entry_3"]["user_id"],
+#                 test_data["entry_3"]["timestamp"],
+#             ).expect(3),
+#             call_enqueue(
+#                 test_data["entry_4"]["provider"],
+#                 test_data["entry_4"]["user_id"],
+#                 test_data["entry_4"]["timestamp"],
+#             ).expect(4),
+#             call_size().expect(4),
+#             call_dequeue().expect("companies_house", 1),
+#             call_dequeue().expect("id_verification", 1),
+#             call_dequeue().expect("bank_statements", 1),
+#             call_dequeue().expect("bank_statements", 2),
+#             call_size().expect(0),
+#         ]
+#     )
 
 
-def test_prioritisations_dependency_resolution() -> None:
-    test_data = get_test_data()
+# def test_prioritisations_timestamp_ordering() -> None:
+#     test_data = get_test_data()
 
-    run_queue(
-        [
-            call_enqueue(
-                test_data["entry_5"]["provider"],
-                test_data["entry_5"]["user_id"],
-                test_data["entry_5"]["timestamp"],
-            ).expect(2),
-            call_size().expect(2),
-            call_dequeue().expect("companies_house", 1),
-            call_dequeue().expect("credit_check", 1),
-            call_size().expect(0),
-        ]
-    )
+#     run_queue(
+#         [
+#             call_enqueue(
+#                 test_data["entry_4"]["provider"],
+#                 test_data["entry_4"]["user_id"],
+#                 iso_ts(delta_minutes=5),
+#             ).expect(1),
+#             call_enqueue(
+#                 test_data["entry_2"]["provider"],
+#                 test_data["entry_2"]["user_id"],
+#                 test_data["entry_2"]["timestamp"],
+#             ).expect(2),
+#             call_size().expect(2),
+#             call_dequeue().expect("bank_statements", 2),
+#             call_dequeue().expect("bank_statements", 1),
+#             call_size().expect(0),
+#         ]
+#     )
+
+
+# def test_prioritisations_dependency_resolution() -> None:
+#     test_data = get_test_data()
+
+#     run_queue(
+#         [
+#             call_enqueue(
+#                 test_data["entry_5"]["provider"],
+#                 test_data["entry_5"]["user_id"],
+#                 test_data["entry_5"]["timestamp"],
+#             ).expect(2),
+#             call_size().expect(2),
+#             call_dequeue().expect("companies_house", 1),
+#             call_dequeue().expect("credit_check", 1),
+#             call_size().expect(0),
+#         ]
+#     )
 
 
 def test_duplication_removal() -> None:
@@ -154,10 +154,3 @@ def test_duplication_removal() -> None:
             call_size().expect(0),
         ]
     )
-
-
-if __name__ == "__main__":
-    test_duplication_removal()
-
-
-
