@@ -119,7 +119,7 @@ class Queue:
 
         if not duplicate:
             new_queue.append(task)
-        print(new_queue)
+        # print(new_queue)
 
         return duplicate, new_queue
 
@@ -129,9 +129,7 @@ class Queue:
             duplicate, new_queue = self._deduplicate(task)
             if duplicate:
                 self.purge()
-                print(self._queue)
                 self._queue = new_queue
-                print(self._queue)
             metadata = task.metadata
             metadata.setdefault("priority", Priority.NORMAL)
             metadata.setdefault("group_earliest_timestamp", MAX_TIMESTAMP)
@@ -285,6 +283,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
