@@ -161,7 +161,3 @@ def test_duplication_removal() -> None:
         ]
     )
 
-
-if __name__ == "__main__":
-    print("here")
-    test_data = get_test_data()
