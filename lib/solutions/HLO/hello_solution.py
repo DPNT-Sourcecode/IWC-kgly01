@@ -1,11 +1,7 @@
 class HelloSolution:
     # friend_name = unicode string
-    def hello(self, friend_name):
-        return "hello " + friend_name
+    def hello(self, _):
+        return "Hello, World!"
 
-
-if __name__ == "__main__":
-    returnStr = HelloSolution().hello("me")
-    print(returnStr)
 
 
