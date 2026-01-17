@@ -88,5 +88,51 @@ def test_prioritisations_rule_of_3() -> None:
     )
 
 
+def test_prioritisations_timestamp_ordering() -> None:
+    test_data = get_test_data()
+
+    run_queue(
+        [
+            call_enqueue(
+                test_data["entry_4"]["provider"],
+                test_data["entry_4"]["user_id"],
+                iso_ts(delta_minutes=5),
+            ).expect(1),
+            call_enqueue(
+                test_data["entry_2"]["provider"],
+                test_data["entry_2"]["user_id"],
+                test_data["entry_2"]["timestamp"],
+            ).expect(2),
+            call_size().expect(2),
+            call_dequeue().expect("bank_statements", 2),
+            call_dequeue().expect("bank_statements", 1),
+            call_size().expect(0),
+        ]
+    )
+
+    def test_prioritisations_dependecny_resolution() -> None:
+    test_data = get_test_data()
+
+    run_queue(
+        [
+            call_enqueue(
+                test_data["entry_4"]["provider"],
+                test_data["entry_4"]["user_id"],
+                iso_ts(delta_minutes=5),
+            ).expect(1),
+            call_enqueue(
+                test_data["entry_2"]["provider"],
+                test_data["entry_2"]["user_id"],
+                test_data["entry_2"]["timestamp"],
+            ).expect(2),
+            call_size().expect(2),
+            call_dequeue().expect("bank_statements", 2),
+            call_dequeue().expect("bank_statements", 1),
+            call_size().expect(0),
+        ]
+    )
+
+
+
 
 
