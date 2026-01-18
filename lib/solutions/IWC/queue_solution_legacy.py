@@ -131,6 +131,8 @@ class Queue:
                     minutes=5
                 ):
                     new_queue.append(task)
+                    if task == bank_statement:
+                        break
                 else:
                     new_queue.append(bank_statement)
                     new_queue.append(task)
@@ -317,3 +319,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
