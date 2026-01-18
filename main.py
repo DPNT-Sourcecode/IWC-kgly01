@@ -9,4 +9,3 @@ def main():
 
 if __name__ == "__main__":
     test_deprioritize_bank_statements_rule_of_three()
-

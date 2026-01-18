@@ -228,4 +228,3 @@ def test_deprioritize_bank_statements_rule_of_three() -> None:
             call_size().expect(0),
         ]
     )
-
