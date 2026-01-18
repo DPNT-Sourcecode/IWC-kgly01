@@ -1,4 +1,6 @@
-from test.solution_tests.IWC.test_queue_solution import test_enqueue_size_dequeue_flow
+from test.solution_tests.IWC.test_queue_solution import (
+    test_deprioritize_bank_statements_rule_of_three,
+)
 
 
 def main():
@@ -6,4 +8,5 @@ def main():
 
 
 if __name__ == "__main__":
-    test_enqueue_size_dequeue_flow()
+    test_deprioritize_bank_statements_rule_of_three()
+
