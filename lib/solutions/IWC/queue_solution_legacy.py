@@ -196,7 +196,7 @@ class Queue:
 
     @property
     def age(self):
-        if self.size() != 0:
+        if self.size != 0:
             task_timestamps = [task.get_timestamp() for task in self._queue]
             age_timedelta = max(task_timestamps) - min(task_timestamps)
             return age_timedelta.seconds
@@ -291,5 +291,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
