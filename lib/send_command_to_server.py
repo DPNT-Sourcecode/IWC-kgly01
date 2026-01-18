@@ -53,6 +53,7 @@ from runner.user_input_action import get_user_input
 """
 
 entry_point_mapping = EntryPointMapping()
+
 runner = (
     QueueBasedImplementationRunnerBuilder()
     .set_config(Utils.get_runner_config())
