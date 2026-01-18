@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import IntEnum
 
 # LEGACY CODE ASSET
@@ -189,6 +189,12 @@ class Queue:
                 metadata["group_earliest_timestamp"] = current_earliest
                 metadata["priority"] = priority_level
 
+        for task in self._queue:
+            if task.provider == BANK_STATEMENTS_PROVIDER.name:
+                skip_ts = self._old_task_skip_priority(task, self._queue)
+                if skip_ts:
+                    if skip_ts - task.get_timestamp() > timedelta(minutes=5):
+                        task.metadata["priority"] = Priority.HIGH
         self._queue.sort(
             key=lambda i: (
                 self._earliest_group_timestamp_for_task(i),
@@ -304,4 +310,3 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
-
