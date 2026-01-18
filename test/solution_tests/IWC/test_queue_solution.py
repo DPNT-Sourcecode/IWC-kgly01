@@ -117,8 +117,8 @@ def test_prioritisations_timestamp_ordering() -> None:
                 test_data["entry_2"]["timestamp"],
             ).expect(2),
             call_size().expect(2),
-            call_dequeue().expect("bank_statements", 1),
             call_dequeue().expect("bank_statements", 2),
+            call_dequeue().expect("bank_statements", 1),
             call_size().expect(0),
         ]
     )
@@ -317,5 +317,6 @@ def test_old_bank_statements() -> None:
             call_dequeue().expect("companies_house", 1),
         ]
     )
+
 
 
