@@ -179,7 +179,6 @@ class Queue:
             key=lambda i: (
                 self._earliest_group_timestamp_for_task(i),
                 self._priority_for_task(i),
-                # self._earliest_group_timestamp_for_task(i),
                 self._timestamp_for_task(i),
             )
         )
@@ -291,3 +290,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
