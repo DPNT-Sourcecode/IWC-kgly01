@@ -224,7 +224,8 @@ def test_deprioritize_bank_statements_rule_of_three() -> None:
             call_dequeue().expect("id_verification", 1),  # entry 3
             call_dequeue().expect("companies_house", 1),  # entry 1
             call_dequeue().expect("bank_statements", 1),  # entry 4
-            call_dequeue().expect("companies_house", 2),  # entry 6
+            call_dequeue().expect("bank_statements", 2),  # entry 6
             call_size().expect(0),
         ]
     )
+
