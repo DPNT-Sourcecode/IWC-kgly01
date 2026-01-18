@@ -70,7 +70,7 @@ class Queue:
                 provider=dependency,
                 user_id=task.user_id,
                 # TODO timestamp=task.timestamp,
-                timestamp=task.get_timestamp,
+                timestamp=task.get_timestamp(),
             )
             tasks.extend(self._collect_dependencies(dependency_task))
             tasks.append(dependency_task)
@@ -92,7 +92,8 @@ class Queue:
 
     @staticmethod
     def _timestamp_for_task(task):
-        timestamp = task.timestamp
+        # TODO timestamp = task.timestamp
+        timestamp = task.get_timestamp()
         if isinstance(timestamp, datetime):
             return timestamp.replace(tzinfo=None)
         if isinstance(timestamp, str):
@@ -108,7 +109,8 @@ class Queue:
                 existing_task.user_id == task.user_id
             ):
                 duplicate = True
-                if existing_task.timestamp < task.timestamp:
+                # TODO if existing_task.timestamp < task.timestamp:
+                if existing_task.get_timestamp() < task.get_timestamp():
                     new_queue.append(existing_task)
                 else:
                     new_queue.append(task)
@@ -141,9 +143,12 @@ class Queue:
         priority_timestamps = {}
         for user_id in user_ids:
             user_tasks = [t for t in self._queue if t.user_id == user_id]
-            earliest_timestamp = sorted(user_tasks, key=lambda t: t.timestamp)[
+            # TODO earliest_timestamp = sorted(user_tasks, key=lambda t: t.timestamp)[
+            #     0
+            # ].timestamp
+            earliest_timestamp = sorted(user_tasks, key=lambda t: t.get_timestamp())[
                 0
-            ].timestamp
+            ].get_timestamp()
             priority_timestamps[user_id] = earliest_timestamp
             task_count[user_id] = len(user_tasks)
 
@@ -293,5 +298,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
