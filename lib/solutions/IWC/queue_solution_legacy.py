@@ -69,7 +69,8 @@ class Queue:
             dependency_task = TaskSubmission(
                 provider=dependency,
                 user_id=task.user_id,
-                timestamp=task.timestamp,
+                timestamp=self._timestamp_for_task(task),
+                # TODO timestamp=task.timestamp,
             )
             tasks.extend(self._collect_dependencies(dependency_task))
             tasks.append(dependency_task)
@@ -292,3 +293,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
