@@ -1,5 +1,5 @@
 from test.solution_tests.IWC.test_queue_solution import (
-    test_age,
+    test_old_bank_statements,
 )
 
 
@@ -8,4 +8,5 @@ def main():
 
 
 if __name__ == "__main__":
-    test_age()
+    test_old_bank_statements()
+
