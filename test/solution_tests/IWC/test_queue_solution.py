@@ -275,4 +275,17 @@ def test_age_empty_queue() -> None:
     )
 
 
-
+def test_age_one_task_queue() -> None:
+    test_data = get_test_data()
+    age_seconds = 0
+    run_queue(
+        [
+            call_enqueue(
+                test_data["entry_1"]["provider"],
+                test_data["entry_1"]["user_id"],
+                test_data["entry_1"]["timestamp"],
+            ).expect(1),
+            call_size().expect(1),
+            call_age().expect(age_seconds),
+        ]
+    )
