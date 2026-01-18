@@ -4,6 +4,7 @@ from .utils import (
     call_dequeue,
     call_enqueue,
     call_size,
+    call_age,
     iso_ts,
     run_queue,
 )
@@ -228,3 +229,30 @@ def test_deprioritize_bank_statements_rule_of_three() -> None:
             call_size().expect(0),
         ]
     )
+
+
+def test_age() -> None:
+    test_data = get_test_data()
+    age_seconds = 7 * 60
+    run_queue(
+        [
+            call_enqueue(
+                test_data["entry_1"]["provider"],
+                test_data["entry_1"]["user_id"],
+                test_data["entry_1"]["timestamp"],
+            ).expect(1),
+            call_enqueue(
+                test_data["entry_2"]["provider"],
+                test_data["entry_2"]["user_id"],
+                iso_ts(delta_minutes=5),
+            ).expect(2),
+            call_enqueue(
+                test_data["entry_3"]["provider"],
+                test_data["entry_3"]["user_id"],
+                iso_ts(delta_minutes=7),
+            ).expect(3),
+            call_size().expect(3),
+            call_age().expect(age_seconds),
+        ]
+    )
+

@@ -1,5 +1,5 @@
 from test.solution_tests.IWC.test_queue_solution import (
-    test_deprioritize_bank_statements_rule_of_three,
+    test_age,
 )
 
 
@@ -8,4 +8,5 @@ def main():
 
 
 if __name__ == "__main__":
-    test_deprioritize_bank_statements_rule_of_three()
+    test_age()
+
