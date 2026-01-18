@@ -9,5 +9,3 @@ def main():
 
 if __name__ == "__main__":
     test_prioritisations_timestamp_ordering()
-
-
