@@ -134,7 +134,8 @@ class Queue:
                     new_queue.append(bank_statement)
                     new_queue.append(task)
                     break
-
+        if len(bank_statements) == 0:
+            new_queue = self._queue
         return new_queue
 
     def enqueue(self, item: TaskSubmission) -> int:
@@ -314,4 +315,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
