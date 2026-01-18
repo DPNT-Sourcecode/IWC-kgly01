@@ -126,15 +126,17 @@ class Queue:
 
         for bank_statement in bank_statements:
             new_queue = []
+            processed_bank_statement = False
             for task in old_queue:
                 if task.get_timestamp() < bank_statement.get_timestamp() + timedelta(
                     minutes=5
                 ):
                     new_queue.append(task)
                     if task == bank_statement:
-                        break
+                        processed_bank_statement = True
                 else:
-                    new_queue.append(bank_statement)
+                    if not processed_bank_statement:
+                        new_queue.append(bank_statement)
                     new_queue.append(task)
                     break
             old_queue = new_queue[:]
@@ -319,4 +321,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
