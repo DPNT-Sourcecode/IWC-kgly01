@@ -268,10 +268,11 @@ def test_age_empty_queue() -> None:
                 test_data["entry_1"]["timestamp"],
             ).expect(1),
             call_size().expect(1),
-            call_dequeue(),
+            call_dequeue().expect("companies_house", 1),
             call_size().expect(0),
             call_age().expect(age_seconds),
         ]
     )
+
 
 
