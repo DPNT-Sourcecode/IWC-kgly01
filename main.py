@@ -1,4 +1,4 @@
-from test.solution_tests.IWC.test_queue_solution import test_old_bank_statements
+from test.solution_tests.IWC.test_queue_solution import test_prioritisations_rule_of_3
 
 
 def main():
@@ -6,5 +6,6 @@ def main():
 
 
 if __name__ == "__main__":
-    test_old_bank_statements()
+    test_prioritisations_rule_of_3()
+
 
