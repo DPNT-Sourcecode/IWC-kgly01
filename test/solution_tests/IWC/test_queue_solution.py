@@ -201,9 +201,9 @@ def test_deprioritize_bank_statements_rule_of_three() -> None:
     run_queue(
         [
             call_enqueue(
-                test_data["entry_6"]["provider"],
-                test_data["entry_6"]["user_id"],
-                test_data["entry_6"]["timestamp"],
+                test_data["entry_2"]["provider"],
+                test_data["entry_2"]["user_id"],
+                test_data["entry_2"]["timestamp"],
             ).expect(1),
             call_enqueue(
                 test_data["entry_4"]["provider"],
@@ -228,3 +228,4 @@ def test_deprioritize_bank_statements_rule_of_three() -> None:
             call_size().expect(0),
         ]
     )
+
