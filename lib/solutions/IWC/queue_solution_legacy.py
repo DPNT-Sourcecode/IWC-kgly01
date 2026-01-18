@@ -69,7 +69,6 @@ class Queue:
             dependency_task = TaskSubmission(
                 provider=dependency,
                 user_id=task.user_id,
-                # TODO timestamp=task.timestamp,
                 timestamp=task.get_timestamp(),
             )
             tasks.extend(self._collect_dependencies(dependency_task))
@@ -92,7 +91,6 @@ class Queue:
 
     @staticmethod
     def _timestamp_for_task(task):
-        # TODO timestamp = task.timestamp
         timestamp = task.get_timestamp()
         if isinstance(timestamp, datetime):
             return timestamp.replace(tzinfo=None)
@@ -109,7 +107,6 @@ class Queue:
                 existing_task.user_id == task.user_id
             ):
                 duplicate = True
-                # TODO if existing_task.timestamp < task.timestamp:
                 if existing_task.get_timestamp() < task.get_timestamp():
                     new_queue.append(existing_task)
                 else:
@@ -143,9 +140,6 @@ class Queue:
         priority_timestamps = {}
         for user_id in user_ids:
             user_tasks = [t for t in self._queue if t.user_id == user_id]
-            # TODO earliest_timestamp = sorted(user_tasks, key=lambda t: t.timestamp)[
-            #     0
-            # ].timestamp
             earliest_timestamp = sorted(user_tasks, key=lambda t: t.get_timestamp())[
                 0
             ].get_timestamp()
@@ -163,7 +157,6 @@ class Queue:
 
             if priority_level is None or priority_level == Priority.NORMAL:
                 metadata["group_earliest_timestamp"] = MAX_TIMESTAMP
-                # TODO, here is the rule of three being applied
                 if task_count[task.user_id] >= 3:
                     metadata["group_earliest_timestamp"] = priority_timestamps[
                         task.user_id
@@ -293,6 +286,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
