@@ -174,9 +174,12 @@ class Queue:
                 metadata["priority"] = priority_level
 
         for t in self._queue:
-            print(self._earliest_group_timestamp_for_task(t))
-            print(self._priority_for_task(t))
-            print(self._timestamp_for_task(t))
+            print(
+                self._earliest_group_timestamp_for_task(t),
+                type(self._earliest_group_timestamp_for_task(t)),
+            )
+            print(self._priority_for_task(t), type(self._priority_for_task(t)))
+            print(self._timestamp_for_task(t), type(self._timestamp_for_task(t)))
 
         self._queue.sort(
             key=lambda i: (
@@ -289,6 +292,7 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
 
