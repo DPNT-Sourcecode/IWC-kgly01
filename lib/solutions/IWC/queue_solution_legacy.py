@@ -117,7 +117,7 @@ class Queue:
         return duplicate, new_queue
 
     def prioritise_old_bank_statements(self) -> list:
-        new_queue = []
+        old_queue = self._queue[:]
         bank_statements = [
             task
             for task in self._queue
@@ -125,7 +125,8 @@ class Queue:
         ]
 
         for bank_statement in bank_statements:
-            for task in self._queue:
+            new_queue = []
+            for task in old_queue:
                 if task.get_timestamp() < bank_statement.get_timestamp() + timedelta(
                     minutes=5
                 ):
@@ -134,7 +135,7 @@ class Queue:
                     new_queue.append(bank_statement)
                     new_queue.append(task)
                     break
-            self._queue = new_queue[:]
+            old_queue = new_queue[:]
 
         if len(bank_statements) == 0:
             new_queue = self._queue[:]
@@ -208,7 +209,7 @@ class Queue:
         )
 
         new_queue = self.prioritise_old_bank_statements()
-        self._queue = new_queue
+        self._queue = new_queue[:]
         task = self._queue.pop(0)
         return TaskDispatch(
             provider=task.provider,
@@ -316,7 +317,3 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
-
-
-
-
