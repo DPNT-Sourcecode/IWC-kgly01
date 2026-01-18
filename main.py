@@ -1,4 +1,6 @@
-from test.solution_tests.IWC.test_queue_solution import test_duplication_removal
+from test.solution_tests.IWC.test_queue_solution import (
+    test_prioritisations_timestamp_ordering,
+)
 
 
 def main():
@@ -6,5 +8,6 @@ def main():
 
 
 if __name__ == "__main__":
-    test_duplication_removal()
+    test_prioritisations_timestamp_ordering()
+
 
