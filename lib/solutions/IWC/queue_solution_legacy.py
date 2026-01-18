@@ -206,7 +206,6 @@ class Queue:
         )
 
         new_queue = self.prioritise_old_bank_statements()
-        self.purge()
         self._queue = new_queue
         task = self._queue.pop(0)
         return TaskDispatch(
@@ -315,5 +314,6 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
 
