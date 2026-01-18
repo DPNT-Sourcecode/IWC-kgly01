@@ -12,6 +12,7 @@ class Priority(IntEnum):
 
     HIGH = 1
     NORMAL = 2
+    LOW = 3
 
 
 @dataclass
@@ -161,7 +162,11 @@ class Queue:
                     metadata["group_earliest_timestamp"] = priority_timestamps[
                         task.user_id
                     ]
-                    metadata["priority"] = Priority.HIGH
+                    if task.provider.name == BANK_STATEMENTS_PROVIDER.name:
+                        metadata["priority"] = Priority.LOW
+                    else:
+                        metadata["priority"] = Priority.HIGH
+
                 else:
                     metadata["priority"] = Priority.NORMAL
             else:
@@ -278,3 +283,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
