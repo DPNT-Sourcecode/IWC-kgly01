@@ -293,7 +293,7 @@ def test_age_one_task_queue() -> None:
 
 def test_old_bank_statements() -> None:
     test_data = get_test_data()
-    age_seconds = 0
+
     run_queue(
         [
             call_enqueue(
@@ -311,7 +311,10 @@ def test_old_bank_statements() -> None:
                 test_data["entry_1"]["user_id"],
                 iso_ts(delta_minutes=7),
             ).expect(3),
-            call_size().expect(1),
-            call_age().expect(age_seconds),
+            call_size().expect(3),
+            call_dequeue().expect("id_verification", 1),
+            call_dequeue().expect("bank_statements", 2),
+            call_dequeue().expect("companies_house", 1),
         ]
     )
+
