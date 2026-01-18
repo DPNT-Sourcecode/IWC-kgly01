@@ -90,6 +90,20 @@ class Queue:
         return metadata.get("group_earliest_timestamp", MAX_TIMESTAMP)
 
     @staticmethod
+    def _next_min_timestamp(task, tasks):
+        ts = [
+            t.get_timestamp() for t in tasks if t.get_timestamp() > task.get_timestamp()
+        ]
+        return min(ts) if ts else None
+
+    @staticmethod
+    def _old_task_skip_priority(
+        task: TaskSubmission, tasks: list[TaskSubmission], provider: str, age_mins: int
+    ):
+        if task.provider != provider:
+            task.metadata["priority"] = Priority.HIGH
+
+    @staticmethod
     def _timestamp_for_task(task):
         timestamp = task.get_timestamp()
         if isinstance(timestamp, datetime):
@@ -290,3 +304,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
