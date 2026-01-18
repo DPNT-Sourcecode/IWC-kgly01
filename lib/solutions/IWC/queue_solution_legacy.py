@@ -90,13 +90,6 @@ class Queue:
         return metadata.get("group_earliest_timestamp", MAX_TIMESTAMP)
 
     @staticmethod
-    def _next_min_timestamp(task, tasks):
-        ts = [
-            t.get_timestamp() for t in tasks if t.get_timestamp() > task.get_timestamp()
-        ]
-        return min(ts) if ts else None
-
-    @staticmethod
     def _timestamp_for_task(task):
         timestamp = task.get_timestamp()
         if isinstance(timestamp, datetime):
@@ -104,22 +97,6 @@ class Queue:
         if isinstance(timestamp, str):
             return datetime.fromisoformat(timestamp).replace(tzinfo=None)
         return timestamp
-
-    def _old_task_skip_priority(
-        self,
-        task: TaskSubmission,
-        tasks: list[TaskSubmission],
-        provider: str,
-        age_mins: int,
-    ):
-        if task.provider != provider:
-            task.metadata["priority"] = Priority.HIGH
-
-        if task.provider == provider:
-            skip_ts = self._next_min_timestamp(task, tasks)
-            if skip_ts:
-                if skip_ts - task.get_timestamp() > timedelta(minutes=5):
-                    task.metadata["priority"] = Priority.HIGH
 
     def _deduplicate(self, task: TaskSubmission) -> tuple[bool, list]:
         # Unsafe to pop a list whilst iterating over it, create new list.
@@ -138,6 +115,27 @@ class Queue:
                 new_queue.append(existing_task)
 
         return duplicate, new_queue
+
+    def prioritise_old_bank_statements(self) -> list:
+        new_queue = []
+        bank_statements = [
+            task
+            for task in self._queue
+            if task.provider == BANK_STATEMENTS_PROVIDER.name
+        ]
+
+        for bank_statement in bank_statements:
+            for task in self._queue:
+                if task.get_timestamp() < bank_statement.get_timestamp() + timedelta(
+                    minutes=5
+                ):
+                    new_queue.append(task)
+                else:
+                    new_queue.append(bank_statement)
+                    new_queue.append(task)
+                    break
+
+        return new_queue
 
     def enqueue(self, item: TaskSubmission) -> int:
         tasks = [*self._collect_dependencies(item), item]
@@ -198,11 +196,6 @@ class Queue:
                 metadata["group_earliest_timestamp"] = current_earliest
                 metadata["priority"] = priority_level
 
-        for task in self._queue:
-            self._old_task_skip_priority(
-                task, self._queue, BANK_STATEMENTS_PROVIDER.name, 5
-            )
-
         self._queue.sort(
             key=lambda i: (
                 self._earliest_group_timestamp_for_task(i),
@@ -211,6 +204,9 @@ class Queue:
             )
         )
 
+        new_queue = self.prioritise_old_bank_statements()
+        self.purge()
+        self._queue = new_queue
         task = self._queue.pop(0)
         return TaskDispatch(
             provider=task.provider,
@@ -318,3 +314,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
