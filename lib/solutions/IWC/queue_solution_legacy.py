@@ -162,7 +162,7 @@ class Queue:
                     metadata["group_earliest_timestamp"] = priority_timestamps[
                         task.user_id
                     ]
-                    if task.provider.name == BANK_STATEMENTS_PROVIDER.name:
+                    if task.provider == BANK_STATEMENTS_PROVIDER.name:
                         metadata["priority"] = Priority.LOW
                     else:
                         metadata["priority"] = Priority.HIGH
@@ -283,4 +283,5 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
 
