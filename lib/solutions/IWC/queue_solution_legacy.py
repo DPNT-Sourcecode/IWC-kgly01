@@ -156,6 +156,7 @@ class Queue:
 
             if priority_level is None or priority_level == Priority.NORMAL:
                 metadata["group_earliest_timestamp"] = MAX_TIMESTAMP
+                # TODO, here is the rule of three being applied
                 if task_count[task.user_id] >= 3:
                     metadata["group_earliest_timestamp"] = priority_timestamps[
                         task.user_id
@@ -277,3 +278,4 @@ async def queue_worker():
         logger.info(f"Finished task: {task}")
 ```
 """
+
