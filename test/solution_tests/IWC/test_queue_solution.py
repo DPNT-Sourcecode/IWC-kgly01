@@ -162,8 +162,8 @@ def test_duplication_removal() -> None:
                 iso_ts(delta_minutes=5),
             ).expect(2),
             call_size().expect(2),
-            call_dequeue().expect("id_verification", 1),
             call_dequeue().expect("bank_statements", 1),
+            call_dequeue().expect("id_verification", 1),
             call_size().expect(0),
         ]
     )
@@ -317,4 +317,5 @@ def test_old_bank_statements() -> None:
             call_dequeue().expect("companies_house", 1),
         ]
     )
+
 
